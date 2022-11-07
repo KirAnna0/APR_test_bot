@@ -112,9 +112,9 @@ ERROR = "Упс! Здесь идут ремонтные работы"
 #--ЗАПРОСЫ----------------------------------------------------------------------------------------#
 @dp.message_handler(commands=['start'], state=None)
 async def buttuon_start_key(message: types.Message):
-    joinedFile = open("user.txt","a") #запись ID при обращении
-    joinedFile.write(str(message.chat.id)+"\n")
-    joinedUsers=set().add(message.chat.id)
+#    joinedFile = open("user.txt","a") #запись ID при обращении
+#    joinedFile.write(str(message.chat.id)+"\n")
+#    joinedUsers=set().add(message.chat.id)
     await message.reply(text=HI, reply_markup=greet_kb, parse_mode='Markdown')
 
 @dp.message_handler(lambda message: message.text == "Начать")
@@ -273,7 +273,7 @@ async def contact(message: types.Message):
 
 #запуск работы
 if __name__ == '__main__':
-#    executor.start_polling(dp) #для терминала
+    executor.start_polling(dp) #для терминала
 
     logging.basicConfig(level=logging.INFO)
     start_webhook(
