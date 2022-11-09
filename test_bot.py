@@ -1,5 +1,6 @@
-import time
+from datetime import datetime
 import logging
+
 
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -29,6 +30,7 @@ dp = Dispatcher(bot=bot, storage=storage)
 #https://newtechaudit.ru/asinhronnyj-telegram-bot-s-vebhukami-na-heroku/
 
 HEROKU_APP_NAME = os.getenv('apr-test-bot') #переименовать
+
 # webhook settings
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
 WEBHOOK_PATH = f'/webhook/{TOKEN}'
@@ -36,7 +38,7 @@ WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 
 # webserver settings
 WEBAPP_HOST = '0.0.0.0'
-WEBAPP_PORT = os.getenv('PORT', default=5000)
+WEBAPP_PORT = os.getenv('PORT',default=5000)
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
@@ -49,7 +51,8 @@ async def on_shutdown(dispatcher):
 #постоянная кнопка запуска
 button_start = KeyboardButton('Начать')
 zayavka = KeyboardButton('Оставить заявку')
-greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(button_start, zayavka)
+calculate = KeyboardButton('Калькулятор')
+greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(button_start, zayavka, calculate)
 
 #кнопка телефона
 markup_request = ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton('Отправить свой контакт ☎️', request_contact=True))
@@ -244,32 +247,82 @@ async def shbb3(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id, text='Ссылка на шаблон заявки: в разработке', reply_markup=shablon_all)
 
-#отправка уведомлений о связи с оператором---------------------------------------------------------------------------------
+#<<<<<<<<<   ПЕРЕМЕННЫЕ СОСТОЯНИЯ    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+class ProfilestatesGroup(StatesGroup):
+    special = State()
+    year = State()
+    ball = State()
+    zapros = State()
+    telefon = State()
+
+#<<<<<<<<<   ПРИЕМ ЗАЯВОК В ОБРАБОТКУ    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 #Через кнопку
 @dp.message_handler(lambda message: message.text == "Оставить заявку")
 async def zvk(message: types.Message):
-    await message.answer(text='Напишите ваш вопрос в чат',
-    reply_markup=markup_request)
+    await message.answer(text='Напишите ваш вопрос в чат',reply_markup=markup_request)
+    await ProfilestatesGroup.zapros.set()
 
-#Перессылка сообщения в другой чат
-@dp.message_handler(content_types=["text"])
-async def sand_message(message: types.Message):
-    bot_chat_id = message.chat.id
-    group_id = 394221139 # id группы в которую должны приходить сообщения
-    await bot.forward_message(group_id, bot_chat_id, message.message_id)
+@dp.message_handler(state=ProfilestatesGroup.zapros)
+async def zapros_info(message: types.Message, state: FSMContext):
+    async with state.proxy() as ZPR: #открываем локальное хранилище данных
+        ZPR['info']=message.text #сохранение текста
+
     answer = 'Ваш запрос получен. Пожалуйста оставьте свой номер телефона, чтобы мы могли связаться с вами'
     await bot.send_message(message.from_user.id, answer, reply_markup=markup_request)
+    await ProfilestatesGroup.next()
+    
+@dp.message_handler(content_types=['contact'], state=ProfilestatesGroup.telefon)
+async def tel(message: types.Message, state: FSMContext):    
+    async with state.proxy() as ZPR: #открываем локальное хранилище данных
+        ZPR['number']=message.text #сохранение текста   
+    await bot.send_message(394221139, f'Пользователь: {message.from_user.full_name} \n \n'
+                                f'Телефон: {message.contact.phone_number} \n \n'
+                                f'Запрос: {ZPR["info"]} \n \n')
+    await message.answer(text="Спасибо за заявку. В скором времени менеджер с вами свяжется", reply_markup=greet_kb)  
+    await state.finish()
+   
+    
+#<<<<<<<<<   КАЛЬКУЛЯТОР БАЛЛОВ    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#Переменные
+admin_id = 394221139
+need_ball = 250
+#now_year = datetime.year - вывестти текущий год
 
-#Перессылка сообщения в другой чат
-@dp.message_handler(content_types=['contact'])
-async def contact(message: types.Message):
-    if message.contact is not None: #Если присланный объект не равен нулю
-        text = 'Новый запрос от: ' + message.contact.full_name + '. телефон: ' + message.contact.phone_number #+ вопрос от клиента
-        await bot.send_message(394221139, text) #тут указать ID получателя заявки. Сейчас ID моего канала. Тестирую 
-        await message.answer(text="Спасибо за заявку. В скором времени менеджер с вами свяжется", reply_markup=greet_kb)
 
-#сохранение логов в базу данных---------------------------------------------------------------------------------------------------
+@dp.message_handler(lambda message: message.text == "Калькулятор")
+async def test(message: types.Message):
+    await message.answer('Укажите специальность')
+    await ProfilestatesGroup.special.set()
 
+@dp.message_handler(state=ProfilestatesGroup.special)
+async def spec(message: types.Message, state: FSMContext):
+    async with state.proxy() as data: #открываем локальное хранилище данных
+        data['special']=message.text #сохранение текста
+    await message.answer('Год выпуска сертификата')
+    await ProfilestatesGroup.next()
+
+@dp.message_handler(state=ProfilestatesGroup.year)
+async def year(message: types.Message, state: FSMContext):
+    async with state.proxy() as data: #открываем локальное хранилище данных
+        data['year']=message.text #сохранение текста
+    await message.answer('Набранно баллов')
+    await ProfilestatesGroup.next()
+
+@dp.message_handler(state=ProfilestatesGroup.ball)
+async def ball(message: types.Message, state: FSMContext):
+    async with state.proxy() as data: #открываем локальное хранилище данных
+        data['ball']=message.text #сохранение текста
+    num1 = int(data['ball'])
+    num2 = int(data['year'])
+    await message.answer(f"Всего нужно набрать {need_ball} за 5 лет. Вам осталось {need_ball - num1} до окончания действия сертификата",reply_markup=greet_kb)
+    await bot.send_message(admin_id, f'Пользователь: {message.from_user.full_name} \n \n'
+                                    f'Специальность: {data["special"]} \n \n'
+                                    f'Год сертификата: {data["year"]} \n \n'
+                                    f'Набрано баллов: {data["ball"]} \n \n')
+    await state.finish() 
+
+
+#<<<<<<<<<  КОНЕЦ   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #запуск работы
 if __name__ == '__main__':
