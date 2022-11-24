@@ -52,20 +52,29 @@ start = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton('🏠 Гла�
 study = InlineKeyboardButton('🧑‍⚕️ Блок: Обучение медиков', callback_data='study_med')
 problems = InlineKeyboardButton('📃 Блок: Проблемы с документами', callback_data='problems_dok')
 category = InlineKeyboardButton('🎓 Блок: Категория', callback_data='category_dok')
+seminar = InlineKeyboardButton('📚 Блок: Семинары УЦ АПР', callback_data='seminar')
 question = InlineKeyboardButton('❓ Блок: Напишите свой вопрос', callback_data='your_quest')
-menu = InlineKeyboardMarkup(row_width=1).add(study,problems,category,question)
+menu = InlineKeyboardMarkup(row_width=1).add(study,problems,category,seminar, question)
+
+#обратные кнопки
+back_blok_1 = InlineKeyboardButton('🔙 Назад', callback_data='back_blok_1') #обучение медиков
+back_blok_pk = InlineKeyboardButton('🔙 Назад', callback_data='back_blok_pk')#обучение пк
+
+#back_blok_2 = #проблемы с доками
+
+#back_block_3 = #категогия
 
 #БЛОК 1: Обучение медиков  #готов
 pk_btn = InlineKeyboardButton('Блок: ПК', callback_data='pk_med')
 pp_btn = InlineKeyboardButton('Блок: ПП', callback_data='pp_med')
 nmo_btn = InlineKeyboardButton('Блок: НМО', callback_data='nmo_med')
 accre_btn = InlineKeyboardButton('Блок: Аккредитация', callback_data='accred_med')
-study_main_m = InlineKeyboardMarkup(row_width=1).add(pk_btn, pp_btn, nmo_btn, accre_btn)
+study_main_m = InlineKeyboardMarkup(row_width=1).add(pk_btn, pp_btn, nmo_btn, accre_btn, back_blok_1)
 #ПК. подраздел. Для чего проходят ПК
 for_accred = InlineKeyboardButton('Для прохождения аккредитации', callback_data='for_acc')
 for_prodlen = InlineKeyboardButton('С целью продлить сертификат', callback_data='for_prod')
 for_prosroch = InlineKeyboardButton('У меня просрочен сертификат', callback_data='for_pros')
-for_menu = InlineKeyboardMarkup(row_width=1).add(for_accred, for_prodlen, for_prosroch)
+for_menu = InlineKeyboardMarkup(row_width=1).add(for_accred, for_prodlen, for_prosroch, back_blok_pk)
 #ПП. подраздел. Для чего проходят ПП
 pp_smp = InlineKeyboardButton('Среднее профессиональное образование', callback_data='pp_smp_med')
 pp_vmp = InlineKeyboardButton('Высшее образование', callback_data='pp_vmp_med')
@@ -74,14 +83,14 @@ pp_for_menu = InlineKeyboardMarkup(row_width=1).add(pp_smp, pp_vmp)
 accred_btn_first = InlineKeyboardButton('Первичная аккредитация', callback_data='first_accred')
 accred_btn_reply = InlineKeyboardButton('Периодическая аккредитация', callback_data='reply_accred')
 accred_btn_spec_first = InlineKeyboardButton('Первичная специализированная', callback_data='spec_accred')
-accred_menu = InlineKeyboardMarkup(row_width=1).add(accred_btn_first, accred_btn_reply,accred_btn_spec_first)
+accred_menu = InlineKeyboardMarkup(row_width=1).add(accred_btn_first, accred_btn_reply,accred_btn_spec_first, back_blok_pk)
 
 #БЛОК 2: Проблемы с документами
 delay = InlineKeyboardButton('Просрочен сертификат. Что делать?', callback_data='delay_sert')
 foreign_dok = InlineKeyboardButton('У меня иностранные документы об образовании. Что делать?', callback_data='foreign')
 pause_work = InlineKeyboardButton('У меня перерыв в стаже. Не работал. Что делать?', callback_data='pause')
 not_end = InlineKeyboardButton('Неоконченное образование. Что делать?', callback_data='not_edu')
-problem_menu = InlineKeyboardMarkup(row_width=1).add(delay, foreign_dok, pause_work, not_end)
+problem_menu = InlineKeyboardMarkup(row_width=1).add(delay, foreign_dok, pause_work, not_end, back_blok_1)
 #Подраздел неоконченное образование
 no_ed_y_n = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Да, я получил(а) серт', callback_data='yes_sert'), 
 InlineKeyboardButton('Нет, не получал(а)', callback_data='no_sert'))
@@ -93,7 +102,7 @@ level_edu = InlineKeyboardMarkup(row_width=1).add(ordinature, specialitet, sredn
 #БЛОК 3: КАТЕГОРИИ
 cat_yes = InlineKeyboardButton('Да, есть категория', callback_data='cat_yes')
 cat_no = InlineKeyboardButton('Нет, категории не имею', callback_data='cat_no')
-categ_y_n = InlineKeyboardMarkup(row_width=2).add(cat_yes, cat_no)
+categ_y_n = InlineKeyboardMarkup(row_width=2).add(cat_yes, cat_no , back_blok_1)
 level_cat = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Первая категория', callback_data='1_cat'), 
 InlineKeyboardButton('Вторая категория', callback_data='2_cat'), 
 InlineKeyboardButton('Высшая категория', callback_data='3_cat'))
@@ -116,7 +125,14 @@ end_btn_5 = InlineKeyboardMarkup(row_width=2).add(back, delay)
 end_btn_6= InlineKeyboardMarkup(row_width=2).add(back, delay, else_question)
 
 #кнопки-ссылки
-rmapo_url = InlineKeyboardMarkup(row_width=1).add(back,InlineKeyboardButton('Расписание на сайте РМАПО', url='https://rmapo.ru/akkreditacija/pervichnaya-specializirovannaya-akkreditaciya/9551-pervichnaja-specializirovannaja-akkreditacija.html'))
+semin_url = InlineKeyboardMarkup().add(back, InlineKeyboardButton('Переход на сайт УП АПР', url='https://apr.center/seminars'))
+
+rmapo_url = InlineKeyboardButton('Расписание на сайте РМАПО для высшего', url='https://rmapo.ru/akkreditacija/pervichnaya-specializirovannaya-akkreditaciya/9551-pervichnaja-specializirovannaja-akkreditacija.html')
+mcud_url = InlineKeyboardButton('Расписание на сайте МК для среднего', url='https://mcud.ru/%D0%B0%D0%BA%D0%BA%D1%80%D0%B5%D0%B4%D0%B8%D1%82%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D0%B0-%D1%81%D0%BF%D0%BE/%D0%BF%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%B0%D1%8F-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D0%B7%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F-%D0%B0%D0%BA%D0%BA%D1%80%D0%B5%D0%B4/')
+accred_url = InlineKeyboardMarkup(row_width=1).add(rmapo_url, mcud_url,back_blok_pk, else_question)
+
+kvalik_vmp = InlineKeyboardMarkup(row_width=2).add(back_blok_pk, InlineKeyboardButton('Перейти в приказ', url='https://docs.cntd.ru/document/420339191'), else_question)
+kvalik_smp = InlineKeyboardMarkup(row_width=2).add(back_blok_pk, InlineKeyboardButton('Перейти в приказ', url='http://ivo.garant.ru/#/document/71231064/paragraph/13:0'), else_question)
 
 #Подсказки
 promp_1 = InlineKeyboardButton('Где посмотреть баллы НМО?', callback_data='promp_1')
@@ -134,20 +150,23 @@ class ProfilestatesGroup(StatesGroup):
     ball_250= State()
     ball_144= State()
     year_delay = State()
+    test=State()
 #<<<<<<<<<  АЛГОРИТМ  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #Первый запуск бота, приветственное слово
 HI = "Привет! Это бот от УЦ 'Академия профессионального развития'. \
-    Здесь Вы можете найти всю полезную информацию по обучению медиков. От НМО до Аккредитации \
-    Для того, чтобы приступить к работе нажмите 'Главное меню'"
+    \nЗдесь Вы можете найти всю полезную информацию по обучению медиков. От НМО до Аккредитации \
+    \nДля того, чтобы приступить к работе нажмите 'Главное меню'"
 @dp.message_handler(commands=['start'], state=None)
 async def button_start_key(message: types.Message):
     await message.reply(text=HI, reply_markup=start)
 
 #Реакция на кнопку Начать, всплытие меню основных разделов
-MAIN_STAGES_TEXT = "Какой раздел вас интересует? Блок обучение медиков: ПК, ПП, НМО, аккредитация. \
-    Блок проблем с документами: просрочка, иностранные доки, перерыв в стаже. \
-    Блок Категория. Или напишите нам свой вопрос - мы вам ответим"
+MAIN_STAGES_TEXT = f'''Какой раздел вас интересует? 
+<b>Блок обучение медиков</b>: ПК, ПП, НМО, аккредитация.
+<b>Блок проблем с документами</b>: просрочка, иностранные доки, перерыв в стаже.
+<b>Блок Категория</b>. 
+Или напишите нам свой вопрос - мы вам ответим'''
 @dp.callback_query_handler(text = "start")
 async def main_stage(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
@@ -155,7 +174,7 @@ async def main_stage(callback_query: types.CallbackQuery):
 
 #реакция на закрытие раздела
 YES_QUESTION = 'Если у вас все еще остались вопросы, можете оставить заявку и наш менеджер вам перезвонит'
-@dp.callback_query_handler(text = "else_question")
+@dp.callback_query_handler(text = ("else_question", 'your_quest'))
 async def ent_answer(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)    
     await bot.send_message(callback_query.from_user.id, text=YES_QUESTION, reply_markup=end_btn_3)
@@ -166,7 +185,11 @@ async def ent_answer(callback_query: types.CallbackQuery):
 async def study_menu(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
     text='Что интересует: ПП, ПК, НМО, акрредитация?', reply_markup=study_main_m)
-
+#go back
+@dp.callback_query_handler(text="back_blok_1")
+async def back_1(callback_query: types.CallbackQuery):
+    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
+    text=MAIN_STAGES_TEXT, reply_markup=menu)  
 #Реакция на кнопку подраздел 'ПК', всплытие подразделов
 @dp.callback_query_handler(text="pk_med")
 async def pk_menu(callback_query: types.CallbackQuery):
@@ -185,28 +208,32 @@ async def for_prodlenie(callback_query: types.CallbackQuery):
 async def for_prosrochki(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
     text='Какой-то инфо текст для ПРОСРОЧКИ сертификатов ', reply_markup=end_btn_5)   
-
+#go_back
+@dp.callback_query_handler(text="back_blok_pk")
+async def back_3(callback_query: types.CallbackQuery):
+    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
+    text='Что интересует: ПП, ПК, НМО, акрредитация?', reply_markup=study_main_m)  
 #Реакция на кнопку подраздел 'ПП', всплытие подразделов
 @dp.callback_query_handler(text="pp_med")
 async def pp_menu(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Ваш уровень образования?', reply_markup=pp_for_menu)  
+    text='Ваш уровень образования?', reply_markup=pp_for_menu)
+
 #реакции на подразделы меню ПП
 INFO_TEXT_1 = 'Инфо текст про то, как посмотреть на какую специальность можно переучится. Ссылка на приказ: https://docs.cntd.ru/document/420339191'
 INFO_TEXT_2 = 'Инфо текст про то, как посмотреть на какую специальность можно переучится. Ссылка на приказ: http://ivo.garant.ru/#/document/71231064/paragraph/13:0'
 @dp.callback_query_handler(text="pp_smp_med")
 async def otv_smp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_1, reply_markup=end_btn) 
+    text=INFO_TEXT_1, reply_markup=kvalik_smp) 
 @dp.callback_query_handler(text="pp_vmp_med")
 async def otv_vmp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_2, reply_markup=end_btn) 
+    text=INFO_TEXT_2, reply_markup=kvalik_vmp) 
 
 #реакция на Блок: Аккредитация, всплытие подразделов
 INFO_TEXT_3 = 'Описание что такое аккредитация. В каких случаях какую надо проходить. И конечный вопрос: Какая аккредитация вас интересует?'
-INFO_TEXT_5 = 'какой-то там инфо текст про расписание. \
-    Полезная ссылка на сайт РМАПО:https://rmapo.ru/akkreditacija/pervichnaya-specializirovannaya-akkreditaciya/9551-pervichnaja-specializirovannaja-akkreditacija.html'
+INFO_TEXT_5 = 'какой-то там инфо текст про расписание. Про то, что нужно готовится к экзаменам, самостоятельно проходить обучение и все такое'
 @dp.callback_query_handler(text='accred_med')
 async def accreditation(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
@@ -225,11 +252,17 @@ async def otv_rep_acc(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(text="spec_accred")
 async def otv_first_spec_ac(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_5, reply_markup=rmapo_url)
+    text=INFO_TEXT_5, reply_markup=accred_url)
+#реакция на Семинар
+@dp.callback_query_handler(text="seminar")
+async def seminar_apr(callback_query: types.CallbackQuery):
+    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
+    text='Инфо текст + переход на наш сайт', reply_markup=semin_url)
+
 #БЛОК. Калькулятор баллов НМО----------------------------------------------------------------------------------------------------
 #кнопки
 calk_nmo = InlineKeyboardButton('🧮 Калькулятор баллов', callback_data='calculate_nmo')
-calculate_nmo = InlineKeyboardMarkup(row_width=2).add(calk_nmo)
+calculate_nmo = InlineKeyboardMarkup(row_width=2).add(calk_nmo, back_blok_pk)
 one_more= InlineKeyboardMarkup(row_width=2).add(calk_nmo, back)
 
 before_mart = InlineKeyboardButton('Выдан до марта: январь, февраль', callback_data='b_mart')
@@ -325,6 +358,33 @@ async def nmo8(message: types.Message, state: FSMContext):
 async def nmo9(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id, text='Нужно копить. Вот тебе инфо.... ', reply_markup=end_btn)
+
+#Тестовые прогоны
+#создаем список годов
+@dp.message_handler(commands=["test"])
+async def t(message: types.Message):
+    await message.answer('go')
+    await ProfilestatesGroup.test.set()
+
+@dp.callback_query_handler(text='go')
+async def test(callback_query: types.CallbackQuery):
+    cur_year=datetime.now().year
+    year_list = []
+
+    markup = InlineKeyboardMarkup(row_width=5, resize_keyboard=True)
+    
+    for i in range(0,5):
+        year_list.append(InlineKeyboardButton(f"{cur_year-i}", callback_data=f"yer{i}"))
+    markup.add(*year_list, InlineKeyboardButton(f"Ранее {cur_year-5}", callback_data=f"yer0"))
+    
+    await bot.send_message(callback_query.from_user.id, 'Выберите год выпуска сертификата',reply_markup=markup)
+
+
+@dp.callback_query_handler(text='yer0')
+async def tt(message: types.Message):
+    await message.answer('Кажется работает?')
+
+
 
 #БЛОК 2. ПРОБЛЕМЫ С ДОКУМЕНТАМИ---------------------------------------------------------------------------------------------------
 #реакция на блок
@@ -448,7 +508,7 @@ async def accred_go(callback_query: types.CallbackQuery):
     text=INFO_TEXT_3, reply_markup=accred_menu)
 
 #БЛОК - ОСТАВИТЬ ЗАЯВКУ - ДА ---------------------------------------------------------------------------------------------------------
-@dp.callback_query_handler(text = ("send_text", "your_quest"))
+@dp.callback_query_handler(text = ("send_text"))
 async def zvk(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id,text='Введите Имя')
@@ -466,19 +526,38 @@ async def name_test(message: types.Message, state: FSMContext):
 async def zapros_info(message: types.Message, state: FSMContext):
     async with state.proxy() as ZPR: #открываем локальное хранилище данных
         ZPR['info']=message.text #сохранение текста
-    answer = 'Пожалуйста оставьте свой номер телефона, чтобы мы могли связаться с вами. Для этого достаточно нажать на кнопку внизу'
+    answer = '''Пожалуйста укажите свой номер телефона, чтобы мы могли связаться с вами
+    Вы можете прописать его вручную в формате 1112223344 или нажать на кнопку внизу.'''
     await bot.send_message(message.from_user.id, answer, reply_markup=contact)
     await ProfilestatesGroup.telefon.set()
-  
+
+@dp.message_handler(lambda message: not message.text.isdigit(), state=ProfilestatesGroup.telefon)
+async def chek_num(message: types.Message):
+    await message.answer('Пожалуйста, укажите номер телефона в формате 1112223344 без дополнительных символов и пробелов или нажмите на кнопку внизу', reply_markup=contact)
+    await ProfilestatesGroup.telefon.set()
+
+@dp.message_handler(state=ProfilestatesGroup.telefon)
+async def tel_2(message: types.Message, state: FSMContext):
+    async with state.proxy() as ZPR: #открываем локальное хранилище данных
+        ZPR['tel']=message.text #сохранение текста
+    await bot.send_message(admin_id, f'Никнейм пользователя: @{message.from_user.username} \n'
+                                f'ID пользователя: {message.from_user.id} \n'
+                                f'Как обращаться: {ZPR["name"]} \n'
+                                f'Телефон: {ZPR["tel"]} \n'
+                                f'Запрос: {ZPR["info"]} \n')
+    await message.answer(text="✔ Спасибо за заявку. В скором времени менеджер с вами свяжется", reply_markup=ReplyKeyboardRemove())
+    await message.answer(text="Для продолжения работы вернитесь в главное меню", reply_markup=end_btn_4)  
+    await state.finish()
 
 @dp.message_handler(content_types=['contact'], state=ProfilestatesGroup.telefon)
 async def tel(message: types.Message, state: FSMContext):    
     async with state.proxy() as ZPR: #открываем локальное хранилище данных
         ZPR['number']=message.text #сохранение текста   
-    await bot.send_message(admin_id, f'Пользователь: {message.from_user.full_name} \n \n'
-                                f'Как обращаться: {ZPR["name"]} \n \n'
-                                f'Телефон: {message.contact.phone_number} \n \n'
-                                f'Запрос: {ZPR["info"]} \n \n')
+    await bot.send_message(admin_id, f'Никнейм пользователя: @{message.from_user.username} \n'
+                                f'ID пользователя: {message.from_user.id} \n'
+                                f'Как обращаться: {ZPR["name"]} \n'
+                                f'Телефон: {ZPR["number"]} \n'
+                                f'Запрос: {ZPR["info"]} \n')
     await message.answer(text="✔ Спасибо за заявку. В скором времени менеджер с вами свяжется", reply_markup=ReplyKeyboardRemove())
     await message.answer(text="Для продолжения работы вернитесь в главное меню", reply_markup=end_btn_4)  
     await state.finish()
@@ -500,6 +579,7 @@ async def my_commands_2(message: types.Message):
 async def pr_1(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id, text='Здесь инфо текст про то где именно смотреть кол-во баллов НМО', show_alert=True)
 #<<<<<<<<<  КОНЕЦ   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 #запуск работы
 if __name__ == '__main__':
