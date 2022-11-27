@@ -49,11 +49,11 @@ async def on_shutdown(dispatcher):
 start = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton('🏠 Главное меню', callback_data='start'))
 
 #стартовое меню
-study = InlineKeyboardButton('🧑‍⚕️ Блок: Обучение медиков', callback_data='study_med')
-problems = InlineKeyboardButton('📃 Блок: Проблемы с документами', callback_data='problems_dok')
-category = InlineKeyboardButton('🎓 Блок: Категория', callback_data='category_dok')
-seminar = InlineKeyboardButton('📚 Блок: Семинары УЦ АПР', callback_data='seminar')
-question = InlineKeyboardButton('❓ Блок: Напишите свой вопрос', callback_data='your_quest')
+study = InlineKeyboardButton('🧑‍⚕️ Обучение медиков', callback_data='study_med')
+problems = InlineKeyboardButton('📃 Проблемы с документами', callback_data='problems_dok')
+category = InlineKeyboardButton('🎓 Квалификационные категории', callback_data='category_dok')
+seminar = InlineKeyboardButton('📚 Семинары', callback_data='seminar')
+question = InlineKeyboardButton('❓ Задайте свой вопрос', callback_data='your_quest')
 menu = InlineKeyboardMarkup(row_width=1).add(study,problems,category,seminar, question)
 
 #обратные кнопки
@@ -65,14 +65,14 @@ back_blok_pk = InlineKeyboardButton('🔙 Назад', callback_data='back_blok_
 #back_block_3 = #категогия
 
 #БЛОК 1: Обучение медиков  #готов
-pk_btn = InlineKeyboardButton('Блок: ПК', callback_data='pk_med')
-pp_btn = InlineKeyboardButton('Блок: ПП', callback_data='pp_med')
-nmo_btn = InlineKeyboardButton('Блок: НМО', callback_data='nmo_med')
-accre_btn = InlineKeyboardButton('Блок: Аккредитация', callback_data='accred_med')
+pk_btn = InlineKeyboardButton('Повышение квалификации', callback_data='pk_med')
+pp_btn = InlineKeyboardButton('Профессиональная переподготовка', callback_data='pp_med')
+nmo_btn = InlineKeyboardButton('Баллы НМО', callback_data='nmo_med')
+accre_btn = InlineKeyboardButton('Аккредитация', callback_data='accred_med')
 study_main_m = InlineKeyboardMarkup(row_width=1).add(pk_btn, pp_btn, nmo_btn, accre_btn, back_blok_1)
 #ПК. подраздел. Для чего проходят ПК
 for_accred = InlineKeyboardButton('Для прохождения аккредитации', callback_data='for_acc')
-for_prodlen = InlineKeyboardButton('С целью продлить сертификат', callback_data='for_prod')
+for_prodlen = InlineKeyboardButton('Продлить сертификат', callback_data='for_prod')
 for_prosroch = InlineKeyboardButton('У меня просрочен сертификат', callback_data='for_pros')
 for_menu = InlineKeyboardMarkup(row_width=1).add(for_accred, for_prodlen, for_prosroch, back_blok_pk)
 #ПП. подраздел. Для чего проходят ПП
@@ -154,19 +154,23 @@ class ProfilestatesGroup(StatesGroup):
 #<<<<<<<<<  АЛГОРИТМ  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #Первый запуск бота, приветственное слово
-HI = "Привет! Это бот от УЦ 'Академия профессионального развития'. \
-    \nЗдесь Вы можете найти всю полезную информацию по обучению медиков. От НМО до Аккредитации \
-    \nДля того, чтобы приступить к работе нажмите 'Главное меню'"
+HI = '''Добрый день! Это бот «Академии профессионального развития»    
+Здесь вы можете найти всю полезную информацию по обучению медицинских специалистов, подготовиться к аккредитации и рассчитать баллы НМО. 
+ 
+Для того, чтобы приступить к работе нажмите «Главное меню»!'''
+
 @dp.message_handler(commands=['start'], state=None)
 async def button_start_key(message: types.Message):
     await message.reply(text=HI, reply_markup=start)
 
 #Реакция на кнопку Начать, всплытие меню основных разделов
-MAIN_STAGES_TEXT = f'''Какой раздел вас интересует? 
-<b>Блок обучение медиков</b>: ПК, ПП, НМО, аккредитация.
-<b>Блок проблем с документами</b>: просрочка, иностранные доки, перерыв в стаже.
-<b>Блок Категория</b>. 
-Или напишите нам свой вопрос - мы вам ответим'''
+MAIN_STAGES_TEXT = f'''<b>Какой раздел вас интересует?</b> 
+<b>Обучение медиков:</b> информации о повышении квалификации, баллах НМО и профессиональной переподготовке.
+<b>Проблемы с документами:</b> что делать если у Вас просрочены документы, документы иностранного государства, или был перерыв в стаже
+<b>Квалификационные категории:</b> если Вам необходимо продлить или получить категорию с нуля.
+<b>Семинары:</b> наши мероприятия с баллами НМО, с возможностью обучения очно и онлайн.
+'''
+
 @dp.callback_query_handler(text = "start")
 async def main_stage(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
@@ -184,7 +188,7 @@ async def ent_answer(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(text="study_med")
 async def study_menu(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Что интересует: ПП, ПК, НМО, акрредитация?', reply_markup=study_main_m)
+    text='Какой вид обучения Вас интересует?', reply_markup=study_main_m)
 #go back
 @dp.callback_query_handler(text="back_blok_1")
 async def back_1(callback_query: types.CallbackQuery):
@@ -194,16 +198,19 @@ async def back_1(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(text="pk_med")
 async def pk_menu(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='С какой целью хотите пройти обучение?', reply_markup=for_menu)     # скрываем предыдущий текст + кнопки
+    text='С какой целью Вы хотите пройти повышение квалификации?', reply_markup=for_menu)     # скрываем предыдущий текст + кнопки
 #реакции на подразделы меню ПК
 @dp.callback_query_handler(text="for_acc")
 async def for_accreditation(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
     text='Вам нужно перейти в раздел аккред. Переход в аккред', reply_markup=end_btn_2)   
+INFO_TEXT_6 = '''Медицинские сертификаты перестали выдаваться учебными центрами 31.12.2020. На смену сертификатам пришло свидетельство об аккредитации.
+Пройти процедуру НЕСЛОЖНО: достаточно курса повышения квалификации 144 часа и портфолио с информацией о профессиональной деятельности.
+'''
 @dp.callback_query_handler(text="for_prod")
 async def for_prodlenie(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Какой-то инфо текст про ПРОДЛЕНИЕ. Переход в аккред', reply_markup=end_btn_2) 
+    text=INFO_TEXT_6, reply_markup=end_btn_2) #ЗАМЕНА КНОПКИ
 @dp.callback_query_handler(text="for_pros")
 async def for_prosrochki(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
@@ -212,24 +219,41 @@ async def for_prosrochki(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(text="back_blok_pk")
 async def back_3(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Что интересует: ПП, ПК, НМО, акрредитация?', reply_markup=study_main_m)  
+    text='Какой вид обучения Вас интересует?', reply_markup=study_main_m)  
 #Реакция на кнопку подраздел 'ПП', всплытие подразделов
 @dp.callback_query_handler(text="pp_med")
 async def pp_menu(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Ваш уровень образования?', reply_markup=pp_for_menu)
+    text='Укажите Ваш уровень образования', reply_markup=pp_for_menu)
 
 #реакции на подразделы меню ПП
-INFO_TEXT_1 = 'Инфо текст про то, как посмотреть на какую специальность можно переучится. Ссылка на приказ: https://docs.cntd.ru/document/420339191'
-INFO_TEXT_2 = 'Инфо текст про то, как посмотреть на какую специальность можно переучится. Ссылка на приказ: http://ivo.garant.ru/#/document/71231064/paragraph/13:0'
+INFO_TEXT_1 = '''
+Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
+https://docs.cntd.ru/document/420339191
+
+<b>Как читать приказ?<b>
+В пункте «Дополнительное профессиональное образование» указаны требования к вашему диплому.
+В пункте «Должности» - возможные должности, которые занимает специалист с выбранной специальностью.
+Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.
+'''
+INFO_TEXT_2 = '''
+Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
+http://ivo.garant.ru/#/document/71231064/paragraph/13:0
+
+<b>Как читать приказ?<b>
+В пункте «Уровень профессионального образования» - требования к Вашему диплому
+В пункте «Дополнительное профессиональное образование» - требования к интернатуре/ординатуре
+В пункте «Должности» - возможные должности, которые занимает специалист с выбранной специальностью.
+Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом и интернатура/ординатура. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.
+'''
 @dp.callback_query_handler(text="pp_smp_med")
 async def otv_smp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_1, reply_markup=kvalik_smp) 
+    text=INFO_TEXT_1, reply_markup=kvalik_smp) #ЗАМЕНА КНОПОК
 @dp.callback_query_handler(text="pp_vmp_med")
 async def otv_vmp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_2, reply_markup=kvalik_vmp) 
+    text=INFO_TEXT_2, reply_markup=kvalik_vmp) #ЗАМЕНА КНОПОК
 
 #реакция на Блок: Аккредитация, всплытие подразделов
 INFO_TEXT_3 = 'Описание что такое аккредитация. В каких случаях какую надо проходить. И конечный вопрос: Какая аккредитация вас интересует?'
@@ -276,10 +300,17 @@ no_2 = InlineKeyboardButton('Нет, не копил(а)', callback_data='no_2')
 yes_no_2 = InlineKeyboardMarkup(row_width=2).add(yes_2, no_2, promp_1)
 
 #реакция на Блок: НМО
+INFO_TEXT_7 = '''
+<b>НМО</b> - это непрерывное медицинское образование. Данная система включает в себя аккредитацию и пришла на смену привычным сертификатам. Главное отличие в процессе обучения. 
+Если раньше специалист учился 1 раз в 5 лет, и объем обучения составлял 144/288 часов. То теперь специалист учится каждый год в объеме 50 часов. То есть 250 часов за 5 лет.
+1 балл НМО = 1 часу обучения. Система является обязательной и для высшего и для среднего медицинского образования.
+
+Ниже Вы найдете калькулятор баллов НМО, который позволит Вам узнать, сколько Вам нужно накопить баллов НМО, чтобы успешно пройти периодическую аккредитацию и получить документ для работы.
+'''
 @dp.callback_query_handler(text="nmo_med")
 async def nmo(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id,text='Что такое НМО и с чем его едят.Далее переход на калькулятор. Нажми кнопку', reply_markup=calculate_nmo)
+    await bot.send_message(callback_query.from_user.id,text=INFO_TEXT_7, reply_markup=calculate_nmo) #ЗАМЕНА КНОПОК
 @dp.callback_query_handler(text="calculate_nmo")
 async def nmo1(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
