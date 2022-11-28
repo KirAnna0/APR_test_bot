@@ -86,13 +86,13 @@ accred_btn_spec_first = InlineKeyboardButton('Первичная специал�
 accred_menu = InlineKeyboardMarkup(row_width=1).add(accred_btn_first, accred_btn_reply,accred_btn_spec_first, back_blok_pk)
 
 #БЛОК 2: Проблемы с документами
-delay = InlineKeyboardButton('Просрочен сертификат. Что делать?', callback_data='delay_sert')
-foreign_dok = InlineKeyboardButton('У меня иностранные документы об образовании. Что делать?', callback_data='foreign')
-pause_work = InlineKeyboardButton('У меня перерыв в стаже. Не работал. Что делать?', callback_data='pause')
-not_end = InlineKeyboardButton('Неоконченное образование. Что делать?', callback_data='not_edu')
+delay = InlineKeyboardButton('У меня просрочен сертификат', callback_data='delay_sert')
+foreign_dok = InlineKeyboardButton('У меня иностранные документы', callback_data='foreign')
+pause_work = InlineKeyboardButton('У меня перерыв в стаже', callback_data='pause')
+not_end = InlineKeyboardButton('У меня неоконченное образование', callback_data='not_edu')
 problem_menu = InlineKeyboardMarkup(row_width=1).add(delay, foreign_dok, pause_work, not_end, back_blok_1)
 #Подраздел неоконченное образование
-no_ed_y_n = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Да, я получил(а) серт', callback_data='yes_sert'), 
+no_ed_y_n = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Да, получил(а)', callback_data='yes_sert'), 
 InlineKeyboardButton('Нет, не получал(а)', callback_data='no_sert'))
 ordinature = InlineKeyboardButton('Высшее - интернатура/ординатура', callback_data='ordinat')
 specialitet = InlineKeyboardButton('Высшее - специалитет', callback_data='specialit')
@@ -100,8 +100,8 @@ srednee = InlineKeyboardButton('Среднее профессиональное'
 level_edu = InlineKeyboardMarkup(row_width=1).add(ordinature, specialitet, srednee)
 
 #БЛОК 3: КАТЕГОРИИ
-cat_yes = InlineKeyboardButton('Да, есть категория', callback_data='cat_yes')
-cat_no = InlineKeyboardButton('Нет, категории не имею', callback_data='cat_no')
+cat_yes = InlineKeyboardButton('Да', callback_data='cat_yes')
+cat_no = InlineKeyboardButton('Нет', callback_data='cat_no')
 categ_y_n = InlineKeyboardMarkup(row_width=2).add(cat_yes, cat_no , back_blok_1)
 level_cat = InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Первая категория', callback_data='1_cat'), 
 InlineKeyboardButton('Вторая категория', callback_data='2_cat'), 
@@ -113,8 +113,9 @@ InlineKeyboardButton('Более 3-ех лет', callback_data='more_3'))
 
 back = InlineKeyboardButton('🔙 Вернуться в меню', callback_data='go_back')
 go_accred = InlineKeyboardButton('🔜 Перейти в блок Аккредитации', callback_data='go_accred')
-else_question = InlineKeyboardButton('❓ Все еще есть вопросы?', callback_data='else_question')
+else_question = InlineKeyboardButton('Получить консультацию', callback_data='else_question')
 request_bnt_2 = InlineKeyboardButton('Оставить заявку', callback_data='send_text')
+period_akkred = InlineKeyboardButton('Периодическая аккредитация',callback_data='per_acc')
 
 end_btn = InlineKeyboardMarkup(row_width=2).add(back, else_question)
 end_btn_2 = InlineKeyboardMarkup(row_width=2).add(back, go_accred, else_question)
@@ -123,9 +124,10 @@ end_btn_4 = InlineKeyboardMarkup(row_width=2).add(back)
 request_bnt_3 = InlineKeyboardMarkup(row_width=2).add(request_bnt_2)
 end_btn_5 = InlineKeyboardMarkup(row_width=2).add(back, delay)
 end_btn_6= InlineKeyboardMarkup(row_width=2).add(back, delay, else_question)
+end_btn_7 = InlineKeyboardMarkup().add(back, period_akkred, else_question)
 
 #кнопки-ссылки
-semin_url = InlineKeyboardMarkup().add(back, InlineKeyboardButton('Переход на сайт УП АПР', url='https://apr.center/seminars'))
+semin_url = InlineKeyboardMarkup(row_width=1).add(back, InlineKeyboardButton('Посмотреть расписание семинаров', url='https://apr.center/seminars'))
 
 rmapo_url = InlineKeyboardButton('Расписание на сайте РМАПО для высшего', url='https://rmapo.ru/akkreditacija/pervichnaya-specializirovannaya-akkreditaciya/9551-pervichnaja-specializirovannaja-akkreditacija.html')
 mcud_url = InlineKeyboardButton('Расписание на сайте МК для среднего', url='https://mcud.ru/%D0%B0%D0%BA%D0%BA%D1%80%D0%B5%D0%B4%D0%B8%D1%82%D0%B0%D1%86%D0%B8%D1%8F-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D1%81%D1%82%D0%B0-%D1%81%D0%BF%D0%BE/%D0%BF%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%B0%D1%8F-%D1%81%D0%BF%D0%B5%D1%86%D0%B8%D0%B0%D0%BB%D0%B8%D0%B7%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F-%D0%B0%D0%BA%D0%BA%D1%80%D0%B5%D0%B4/')
@@ -164,7 +166,7 @@ async def button_start_key(message: types.Message):
     await message.reply(text=HI, reply_markup=start)
 
 #Реакция на кнопку Начать, всплытие меню основных разделов
-MAIN_STAGES_TEXT = f'''<b>Какой раздел вас интересует?</b> 
+MAIN_STAGES_TEXT = '''<b>Какой раздел вас интересует?</b> 
 <b>Обучение медиков:</b> информации о повышении квалификации, баллах НМО и профессиональной переподготовке.
 <b>Проблемы с документами:</b> что делать если у Вас просрочены документы, документы иностранного государства, или был перерыв в стаже
 <b>Квалификационные категории:</b> если Вам необходимо продлить или получить категорию с нуля.
@@ -207,14 +209,16 @@ async def for_accreditation(callback_query: types.CallbackQuery):
 INFO_TEXT_6 = '''Медицинские сертификаты перестали выдаваться учебными центрами 31.12.2020. На смену сертификатам пришло свидетельство об аккредитации.
 Пройти процедуру НЕСЛОЖНО: достаточно курса повышения квалификации 144 часа и портфолио с информацией о профессиональной деятельности.
 '''
-@dp.callback_query_handler(text="for_prod")
+@dp.callback_query_handler(text=("for_prod"))
 async def for_prodlenie(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_6, reply_markup=end_btn_2) #ЗАМЕНА КНОПКИ
+    text=INFO_TEXT_6, reply_markup=end_btn_7)
+INFO_TEXT_9='''НЕ ПИСАТЬ. Укажите год выдачи Вашего посленего сертификата? <em>(напишите в ответном сообщении год цифрами)</em>
+'''
 @dp.callback_query_handler(text="for_pros")
 async def for_prosrochki(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Какой-то инфо текст для ПРОСРОЧКИ сертификатов ', reply_markup=end_btn_5)   
+    text=INFO_TEXT_9, reply_markup=end_btn_5)   
 #go_back
 @dp.callback_query_handler(text="back_blok_pk")
 async def back_3(callback_query: types.CallbackQuery):
@@ -227,33 +231,29 @@ async def pp_menu(callback_query: types.CallbackQuery):
     text='Укажите Ваш уровень образования', reply_markup=pp_for_menu)
 
 #реакции на подразделы меню ПП
-INFO_TEXT_1 = '''
-Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
+INFO_TEXT_1 = f'''Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
 https://docs.cntd.ru/document/420339191
-
 <b>Как читать приказ?<b>
 В пункте «Дополнительное профессиональное образование» указаны требования к вашему диплому.
 В пункте «Должности» - возможные должности, которые занимает специалист с выбранной специальностью.
-Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.
-'''
-INFO_TEXT_2 = '''
-Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
-http://ivo.garant.ru/#/document/71231064/paragraph/13:0
+Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.'''
 
+INFO_TEXT_2 = f'''Откройте приказ доступный по ссылке и найдите интересующую Вас специальность.
+http://ivo.garant.ru/#/document/71231064/paragraph/13:0
 <b>Как читать приказ?<b>
 В пункте «Уровень профессионального образования» - требования к Вашему диплому
 В пункте «Дополнительное профессиональное образование» - требования к интернатуре/ординатуре
 В пункте «Должности» - возможные должности, которые занимает специалист с выбранной специальностью.
-Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом и интернатура/ординатура. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.
-'''
+Для успешного прохождения переподготовки, у Вас должен быть соответствующий диплом и интернатура/ординатура. В ином случае Вы не можете претендовать на переподготовку по выбранной специальности.'''
+
 @dp.callback_query_handler(text="pp_smp_med")
 async def otv_smp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_1, reply_markup=kvalik_smp) #ЗАМЕНА КНОПОК
+    text=INFO_TEXT_1, reply_markup=kvalik_smp)
 @dp.callback_query_handler(text="pp_vmp_med")
 async def otv_vmp(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text=INFO_TEXT_2, reply_markup=kvalik_vmp) #ЗАМЕНА КНОПОК
+    text=INFO_TEXT_2, reply_markup=kvalik_vmp)
 
 #реакция на Блок: Аккредитация, всплытие подразделов
 INFO_TEXT_3 = 'Описание что такое аккредитация. В каких случаях какую надо проходить. И конечный вопрос: Какая аккредитация вас интересует?'
@@ -268,7 +268,7 @@ INFO_TEXT_4='Для получения первичной аккредитаци
 async def otv_first_ac(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
     text=INFO_TEXT_4, reply_markup=end_btn) 
-@dp.callback_query_handler(text="reply_accred")
+@dp.callback_query_handler(text=("reply_accred",'per_acc'))
 async def otv_rep_acc(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id,text='Какой-то инфо текст про то, что нужны баллы', reply_markup=calculate_nmo)  
@@ -278,10 +278,18 @@ async def otv_first_spec_ac(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
     text=INFO_TEXT_5, reply_markup=accred_url)
 #реакция на Семинар
+INFO_TEXT_14='''Наш учебный центр «Академия профессионального развития» проводит не только обучение ДПО, но и семинары/вебинары для медицинских работников.
+В мероприятиях участвуют ведущие лекторы по своим направлениям, и дают слушателям актуальную информацию и знания по соответствующим темам: УЗИ, гинекология, неврология и многое другое.
+Мероприятия доступны в очном формате в Москве и в дистанционном по всей России.
+
+К тому же Вы можете получить баллы НМО за каждый семинар: 36 или 50 баллов.
+
+Присоединяйтесь!
+'''
 @dp.callback_query_handler(text="seminar")
 async def seminar_apr(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Инфо текст + переход на наш сайт', reply_markup=semin_url)
+    text=INFO_TEXT_14, reply_markup=semin_url)
 
 #БЛОК. Калькулятор баллов НМО----------------------------------------------------------------------------------------------------
 #кнопки
@@ -390,73 +398,57 @@ async def nmo9(callback_query: types.CallbackQuery):
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id, text='Нужно копить. Вот тебе инфо.... ', reply_markup=end_btn)
 
-#Тестовые прогоны
-#создаем список годов
-@dp.message_handler(commands=["test"])
-async def t(message: types.Message):
-    await message.answer('go')
-    await ProfilestatesGroup.test.set()
-
-@dp.callback_query_handler(text='go')
-async def test(callback_query: types.CallbackQuery):
-    cur_year=datetime.now().year
-    year_list = []
-
-    markup = InlineKeyboardMarkup(row_width=5, resize_keyboard=True)
-    
-    for i in range(0,5):
-        year_list.append(InlineKeyboardButton(f"{cur_year-i}", callback_data=f"yer{i}"))
-    markup.add(*year_list, InlineKeyboardButton(f"Ранее {cur_year-5}", callback_data=f"yer0"))
-    
-    await bot.send_message(callback_query.from_user.id, 'Выберите год выпуска сертификата',reply_markup=markup)
-
-
-@dp.callback_query_handler(text='yer0')
-async def tt(message: types.Message):
-    await message.answer('Кажется работает?')
-
-
-
 #БЛОК 2. ПРОБЛЕМЫ С ДОКУМЕНТАМИ---------------------------------------------------------------------------------------------------
 #реакция на блок
+INFO_TEXT_8='''
+Опишите, какая у Вас проблема?
+Если вы не нашли свой вариант, то нажмите «Назад» и нажмите кнопку «Получить консультацию»'''
 @dp.callback_query_handler(text='problems_dok')
 async def problem_btn(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Какая у вас проблема?', reply_markup=problem_menu) 
-#реакция на просрочку сертификата -- тоже самое, что и перерыв в стаже ???
+    text=INFO_TEXT_8, reply_markup=problem_menu) 
+#реакция на просрочку сертификата
 @dp.callback_query_handler(text='delay_sert')
 async def delay_sert_btn(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Вот тут надо что-то прописать. У меня стоит алгоритм на просчет даты получения серта, но не понятно зачем он', reply_markup=end_btn_2) #ПЕРЕХОД НА АККРЕДИТАЦИЮ
+    text='ОБНОВЛЕНИЕ АЛГОРИТМА', reply_markup=end_btn_2) #ПЕРЕХОД НА АККРЕДИТАЦИЮ
+INFO_TEXT_10 = '''Для прохождения обучения на территории РФ Вам необходимо подтвердить иностранные документы в соответствующих ведомствах.
+Диплом об образовании подтверждается в Рособрнадзоре(https://obrnadzor.gov.ru/) (за исключением взаимопризнанных документов - посмотреть список государств: https://nic.glavex.ru//ru/docs/foreign/confirmation)
+Медицинский сертификат подтверждается в Росздравнадзоре (https://roszdravnadzor.gov.ru/).
+После обращения в данные ведомства Вам будет прислана инструкция о дальнейших действиях для подтверждения документов.
+'''
 #реакция на иностранные документы
 @dp.callback_query_handler(text='foreign')
 async def foreign_btn(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Здесь короткое описание того, что надо делать в этом случае и ссылка на наш сайт. Не нашла ее на нашем сайте', reply_markup=end_btn)
-
+    text=INFO_TEXT_10, reply_markup=end_btn)
 #реакция на неоконченное образование
 @dp.callback_query_handler(text='not_edu')
 async def not_edu_btn(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Есть ли сертификат или свидетельство на руках?', reply_markup=no_ed_y_n)
-#реакция на подраздел. ДА
+    text='Получали ли Вы сертификат или свидительство об аккредитации?', reply_markup=no_ed_y_n) 
+#реакция на подраздел после да
+INFO_TEXT_11 = '''Вы можете обучаться по любым программам дополнительного профессионального образования.
+Перейдите в главное меню, в раздел «Обучение медиков», чтобы посмотреть доступные варианты обучения
+'''
 @dp.callback_query_handler(text='yes_sert')
-async def not_btn1(callback_query: types.CallbackQuery):
-    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Какой у вас уровень образования?', reply_markup=level_edu)      
-#реакция на подраздел после да. высшее и среднее образование
-@dp.callback_query_handler(text=('ordinat','sred'))
 async def not_btn2(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='У вас на руках должны быть актуальные сертификаты или свидетельства. Вы можете проходить любое обучение', reply_markup=end_btn)     
-#реакция на подраздел после да. специалитет высшее + ответ нет
-@dp.callback_query_handler(text=('no_sert','specialit'))
+    text=INFO_TEXT_11, reply_markup=end_btn)     
+#реакция на подраздел после нет
+INFO_TEXT_12 = '''Если Вы не получали документов, то Вы не сможете без них обучаться по программам дополнительного профессионального образования.
+Для получения документов у Вас есть два варианта:
+1. Обратиться в учебное заведение и завершить свое обучение, пройти первичную аккредитацию.
+2. При наличии диплома на руках Вы можете обратиться в свой территориальный аккредитационный центр и пройти первичную аккредитацию.
+'''
+@dp.callback_query_handler(text='no_sert')
 async def not_btn3(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Вам необходимо обратиться в то учреждение, где вы заканчивали обучение', reply_markup=end_btn)  
+    text=INFO_TEXT_12, reply_markup=end_btn)  
 
 #реакция на перерыв в стаже КАЛЬКУЛЯТОР ПЕРЕРЫВА-------------------------------------------------------------------------------------------------------------------
 #кнопки
+#ОБНОВЛЕНИЕ КАЛЬКУЛЯТОРА ПЕРЕРЫВА В СТАЖЕ + ПРОСРОЧКА СЕРТИФИКАТА
 y_n_3= InlineKeyboardMarkup(row_width=2).add(InlineKeyboardButton('Да, работал(а)', callback_data='y_work'), 
 InlineKeyboardButton('Нет, не работал(а)', callback_data='n_work'))
 
@@ -492,21 +484,20 @@ async def stazh2(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(text="category_dok")
 async def cat(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Есть ли у вас уже категория', reply_markup=categ_y_n)
+    text='Присвоена ли Вам в данный момент квалификационная категория?', reply_markup=categ_y_n)
 #Категория - ДА
-@dp.callback_query_handler(text="cat_yes")
-async def cat1(callback_query: types.CallbackQuery):
-    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Какая у вас категория?', reply_markup=level_cat)
+#@dp.callback_query_handler(text="cat_yes")
+#async def cat1(callback_query: types.CallbackQuery):
+#    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
+#    text='Какая у Вас категория?', reply_markup=level_cat)
 #Подразделы уровня категорий
-@dp.callback_query_handler(text=("1_cat", "2_cat"))
+INFO_TEXT_13='''Для повышения или для сохранения текущей категории, Вам необходимо собрать пакет документов, написать отчет о своей профессиональной деятельности и подготовиться к тестированию и собеседованию. В ходе тестирования специалист отвечает на теоретические и практические вопросы по своей специальности с вариантами ответов. В ходе собеседования комиссия обсуждает с претендентом отчет о его профессиональной деятельности и задает дополнительные вопросы по специальности.
+Аттестация проходит в Вашей территориальной комиссии, у каждой комиссии могут быть свои варианты тестирования и дополнительные вопросы.
+'''
+@dp.callback_query_handler(text='cat_yes')
 async def cat5(callback_query: types.CallbackQuery):
     await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Для того, чтобы получиь категорию выше нужно собрать пакет документов и иметь стаж более 3 лет по специальности', reply_markup=end_btn)
-@dp.callback_query_handler(text="3_cat")
-async def cat6(callback_query: types.CallbackQuery):
-    await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, 
-    text='Сейчас мораторий на продление/подтверждение категории. Можно только понизить на ступень', reply_markup=end_btn)
+    text=INFO_TEXT_13, reply_markup=end_btn)
 #Категория - НЕТ
 @dp.callback_query_handler(text="cat_no")
 async def cat2(callback_query: types.CallbackQuery):
@@ -572,7 +563,6 @@ async def tel_2(message: types.Message, state: FSMContext):
     async with state.proxy() as ZPR: #открываем локальное хранилище данных
         ZPR['tel']=message.text #сохранение текста
     await bot.send_message(admin_id, f'Никнейм пользователя: @{message.from_user.username} \n'
-                                f'ID пользователя: {message.from_user.id} \n'
                                 f'Как обращаться: {ZPR["name"]} \n'
                                 f'Телефон: {ZPR["tel"]} \n'
                                 f'Запрос: {ZPR["info"]} \n')
@@ -585,7 +575,6 @@ async def tel(message: types.Message, state: FSMContext):
     async with state.proxy() as ZPR: #открываем локальное хранилище данных
         ZPR['number']=message.text #сохранение текста   
     await bot.send_message(admin_id, f'Никнейм пользователя: @{message.from_user.username} \n'
-                                f'ID пользователя: {message.from_user.id} \n'
                                 f'Как обращаться: {ZPR["name"]} \n'
                                 f'Телефон: {ZPR["number"]} \n'
                                 f'Запрос: {ZPR["info"]} \n')
